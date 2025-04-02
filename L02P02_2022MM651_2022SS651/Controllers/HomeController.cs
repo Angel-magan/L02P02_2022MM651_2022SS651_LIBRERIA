@@ -22,6 +22,22 @@ namespace L02P02_2022MM651_2022SS651.Controllers
         {
             return View();
         }
+        public IActionResult ListadoAutores()
+        {
+            return View();
+        }
+        public IActionResult ListadoLibroAutor()
+        {
+            return View();
+        }
+        public IActionResult Confirmacion()
+        {
+            return View();
+        }
+        public IActionResult ComentariosExistentes()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
