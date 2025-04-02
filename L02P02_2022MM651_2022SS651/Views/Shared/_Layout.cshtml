@@ -8,6 +8,26 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/L02P02_2022MM651_2022SS651.styles.css" asp-append-version="true" />
 </head>
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .container {
+        flex: 1;
+    }
+
+    footer {
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px;
+    }
+
+</style>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
@@ -35,23 +55,22 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Confirmacion">Confirmacion</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ComentariosExistentes">Confirmacion</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ComentariosExistentes">ComentariosExistentes</a>
                         </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - L02P02_2022MM651_2022SS651 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
+    <footer class="bg-header-footer mt-5 text-center pt-3 pb-3">
+        <p class="text-white">2022-MM-651 Ángel Gabriel Mira Magaña</p>
+        <p class="text-white">2022-SS-651 Estefany Elizabeth Sanabria Sanabria</p>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

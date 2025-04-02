@@ -2,6 +2,53 @@
     ViewData["Title"] = "Comentarios";
 }
 
-<div>
-    Comentarios
+
+<div class="container mt-4">
+    <div class="list-group-item">
+        <div class="row pt-3 pb-3">
+            <div class="col-md-6 d-flex">
+                <label class="fw-bold text-primary">Autor:</label>
+                <div class="ms-3">Nombre del Autor Seleccionado</div>
+            </div>
+            <div class="col-md-6 d-flex">
+                <label class="fw-bold text-primary">Libro:</label>
+                <div class="ms-3">Nombre del Libro Seleccionado</div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6">
+            <h5 class="text-primary fw-bold">Comentarios Existentes</h5>
+            <div class="list-group">
+                @foreach (var comentario in ViewBag.Comentarios)
+                {
+                    <div class="list-group-item">
+                        <strong>@comentario.Titulo</strong>
+                        <div class="text-muted">Usuario: @comentario.Usuario</div>
+                        <div class="text-muted">Fecha: @comentario.Fecha</div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <h5 class="text-primary fw-bold">Agregar un Comentario</h5>
+
+            @using (Html.BeginForm("GuardarComentario", "Libros", FormMethod.Post, new { @class = "mt-2" }))
+            {
+                <div class="mb-3">
+                    @Html.Label("Comentario")
+                    @Html.TextArea("Comentario", null, new { @class = "form-control", rows = "4", required = "required" })
+                </div>
+
+                <div class="list-group-item rounded">
+                    <button type="submit" class="btn btn-success w-100">Guardar Comentario</button>
+
+                </div>
+            }
+        </div>
+    </div>
 </div>
