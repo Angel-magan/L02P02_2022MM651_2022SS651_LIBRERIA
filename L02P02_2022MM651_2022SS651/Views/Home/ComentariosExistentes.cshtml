@@ -3,15 +3,32 @@
 }
 <link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
 <div class="bg-header-footer container-fluid text-center pt-5 pb-5">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/UNICAES_Logo.png/800px-UNICAES_Logo.png" alt="Logo UNICAES" class="logo-unicaes" />
-    <h2 class="text-white">Comentarior por Libros</h2>
+    <h2 class="text-white">Comentarios por Libros</h2>
     <p class="text-secondary">
         Seleccione el autor -> Seleccione el Libro -> Se muestran los comentarios existentes
         -> Adicione un nuevo comentario
     </p>
 </div>
 
+<div class="container mb-5">
+    <div id="contenedor-principal">
+        <ul class="progressbar">
+            <li data-view="ListadoAutores">Autores</li>
+            <li data-view="ListadoLibroAutor">Libros</li>
+            <li class="active" data-view="ComentariosExistentes">Comentarios existentes</li>
+            <li data-view="Confirmacion">Nuevo comentario</li>
+        </ul>
+
+        <div id="contenido-parcial" class="contenido-dinamico">
+        </div>
+    </div>
+</div>
 <div class="container mt-4">
     <div class="list-group-item">
         <div class="row pt-3 pb-3">
@@ -24,9 +41,7 @@
                 <div class="ms-3">@ViewBag.Libro</div>
             </div>
         </div>
-
     </div>
-
 
     <div class="row">
         <div class="col-md-6">
@@ -34,18 +49,17 @@
             <div class="list-group">
                 @foreach (var comentario in Model)
                 {
-                    <tr>
+                    <div class="list-group-item">
                         <strong>@comentario.comentarios</strong>
-                        <td>@comentario.usuario</td>
-                        <td>@comentario.created_at.ToString("dd/MM/yyyy")</td>
-                    </tr>
+                        <p>@comentario.usuario</p>
+                        <p>@comentario.created_at.ToString("dd/MM/yyyy")</p>
+                    </div>
                 }
+
             </div>
         </div>
 
         <div class="col-md-6">
-
-            <!-- Agregar Comentario -->
             <div class="col-md-6">
                 <h5 class="text-primary fw-bold">Agregar un Comentario</h5>
 
@@ -67,24 +81,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $(document).ready(function () {
-        $(".nuevo-comentario").click(function () {
-            $(".progressbar li").removeClass("active");
-            $(".progressbar li[data-view='Confirmacion']").addClass("active");
-
-            $.ajax({
-                url: "/Home/Confirmacion",
-                type: "GET",
-                success: function (data) {
-                    $("#contenido-parcial").html(data);
-                },
-                error: function () {
-                    $("#contenido-parcial").html("<p>Error al cargar la confirmación.</p>");
-                }
-            });
-        });
-    });
-
-</script>

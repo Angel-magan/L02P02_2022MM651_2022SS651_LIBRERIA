@@ -1,4 +1,13 @@
-﻿.bg-header-footer {
+﻿#contenedor-principal {
+    display: flex;
+    flex-direction: column; 
+}
+
+#contenido-parcial {
+    margin-top: 20px; 
+}
+
+.bg-header-footer {
     background-color: #22252c;
 }
 .logo-unicaes {

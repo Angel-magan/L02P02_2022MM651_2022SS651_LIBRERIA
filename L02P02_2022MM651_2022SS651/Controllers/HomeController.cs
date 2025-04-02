@@ -27,10 +27,9 @@ namespace L02P02_2022MM651_2022SS651.Controllers
         }
         public IActionResult ListadoAutores()
         {
-            var autores = _context.autores.ToList(); // Obtiene todos los autores de la BD
-            return View(autores);
+            var autores = _context.autores.ToList(); 
+            return PartialView(autores);
         }
-
 
         public IActionResult ListadoLibroAutor(int idAutor)
         {
@@ -38,7 +37,7 @@ namespace L02P02_2022MM651_2022SS651.Controllers
             var autor = _context.autores.FirstOrDefault(a => a.id == idAutor);
 
             ViewBag.Autor = autor?.autor ?? "Autor Desconocido"; 
-            return View(libros);
+            return PartialView(libros);
         }
 
         public IActionResult ComentariosExistentes(int idLibro)
@@ -46,7 +45,7 @@ namespace L02P02_2022MM651_2022SS651.Controllers
             var libro = _context.libros.FirstOrDefault(l => l.id == idLibro);
             if (libro == null)
             {
-                return NotFound(); // Si el libro no existe, retornamos un error 404
+                return NotFound(); 
             }
 
             var autor = _context.autores.FirstOrDefault(a => a.id == libro.id_autor);
@@ -60,7 +59,7 @@ namespace L02P02_2022MM651_2022SS651.Controllers
             ViewData["IdLibro"] = libro.id;
             ViewData["IdAutor"] = libro.id_autor;
 
-            return View(comentarios);
+            return PartialView(comentarios);
         }
 
         private static List<object> ComentariosDB = new List<object>();
@@ -70,10 +69,16 @@ namespace L02P02_2022MM651_2022SS651.Controllers
             var libro = _context.libros.FirstOrDefault(l => l.id == idLibro);
             var autor = _context.autores.FirstOrDefault(a => a.id == idAutor);
 
-            ViewBag.Comentarios = ComentariosDB.FindAll(c => (int)c.GetType().GetProperty("idLibro").GetValue(c) == idLibro);
+            // Obtener los comentarios desde la bd
+            var comentarios = _context.comentarios_Libros
+                                      .Where(c => c.id_libro == idLibro)
+                                      .OrderByDescending(c => c.created_at)
+                                      .ToList();
+
+            ViewBag.Comentarios = comentarios;
             ViewBag.ComentarioNuevo = TempData["ComentarioNuevo"] as string ?? "";
             ViewBag.IdLibro = idLibro;
-            ViewBag.Libro = libro.nombre;
+            ViewBag.Libro = libro?.nombre ?? "Libro Desconocido";
             ViewBag.Autor = autor?.autor ?? "Autor Desconocido";
             ViewBag.IdAutor = idAutor;
 
@@ -88,21 +93,25 @@ namespace L02P02_2022MM651_2022SS651.Controllers
                 return RedirectToAction("Confirmacion", new { idLibro = idLibro, idAutor = idAutor });
             }
 
-            var nuevoComentario = new
+            int nuevoId = (_context.comentarios_Libros.Any() ? _context.comentarios_Libros.Max(c => c.id) + 1 : 1);
+
+            var nuevoComentario = new comentarios_libros
             {
+                id = nuevoId,
+                id_libro = idLibro,
                 comentarios = Comentario,
-                usuario = "UsuarioActual",
-                created_at = DateTime.Now,
-                idLibro = idLibro
+                usuario = "UsuarioActual", 
+                created_at = DateTime.Now
             };
 
-            // Guardar en "base de datos"
-            ComentariosDB.Add(nuevoComentario);
+            _context.comentarios_Libros.Add(nuevoComentario);
+            _context.SaveChanges();
 
             TempData["ComentarioNuevo"] = Comentario;
 
             return RedirectToAction("Confirmacion", new { idLibro = idLibro, idAutor = idAutor });
         }
+
 
 
 
