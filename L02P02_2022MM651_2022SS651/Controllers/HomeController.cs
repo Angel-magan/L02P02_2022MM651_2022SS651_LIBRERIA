@@ -32,10 +32,22 @@ namespace L02P02_2022MM651_2022SS651.Controllers
         }
         public IActionResult Confirmacion()
         {
+            ViewBag.Comentarios = new List<object>
+            {
+                new { Titulo = "Comentario 1", Usuario = "Usuario1", Fecha = "01/04/2025" },
+                new { Titulo = "Comentario 2", Usuario = "Usuario2", Fecha = "02/04/2025" },
+                new { Titulo = "Comentario 3", Usuario = "Usuario3", Fecha = "03/04/2025" }
+            };
             return View();
         }
         public IActionResult ComentariosExistentes()
         {
+            ViewBag.Comentarios = new List<object>
+            {
+                new { Titulo = "Comentario 1", Usuario = "Usuario1", Fecha = "01/04/2025" },
+                new { Titulo = "Comentario 2", Usuario = "Usuario2", Fecha = "02/04/2025" },
+                new { Titulo = "Comentario 3", Usuario = "Usuario3", Fecha = "03/04/2025" }
+            };
             return View();
         }
 
