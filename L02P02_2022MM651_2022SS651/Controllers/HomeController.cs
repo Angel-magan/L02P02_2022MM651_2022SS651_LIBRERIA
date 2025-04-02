@@ -25,74 +25,85 @@ namespace L02P02_2022MM651_2022SS651.Controllers
         {
             return View();
         }
-        //public IActionResult ListadoAutores()
-        //{
-        //    return View();
-        //}
-        //public IActionResult ListadoLibroAutor()
-        //{
-        //    return View();
-        //}
-        //public IActionResult Confirmacion()
-        //{
-        //    return View();
-        //}
-        //public IActionResult ComentariosExistentes()
-        //{
-        //    return View();
-        //}
-        //Se agrego ahorita *******
         public IActionResult ListadoAutores()
         {
             var autores = _context.autores.ToList(); // Obtiene todos los autores de la BD
-            return PartialView(autores);
+            return View(autores);
         }
 
-        //public IActionResult ListadoLibroAutor()
-        //{
-        //    return PartialView();
-        //}
 
         public IActionResult ListadoLibroAutor(int idAutor)
         {
-            //var libros = _context.libros
-            //    .Where(l => l.id_autor == idAutor) // Filtrar por autor seleccionado
-            //    .ToList();
-
-            //var autor = _context.autores.FirstOrDefault(a => a.id == idAutor);
-
-            //ViewBag.Autor = autor != null ? autor.autor : "Desconocido";
-
-            ////return View(libros);
-            //return PartialView(libros);
             var libros = _context.libros.Where(l => l.id_autor == idAutor).ToList();
             var autor = _context.autores.FirstOrDefault(a => a.id == idAutor);
 
-            ViewBag.Autor = autor?.autor ?? "Autor Desconocido"; // Muestra el nombre del autor
-            return PartialView(libros);
+            ViewBag.Autor = autor?.autor ?? "Autor Desconocido"; 
+            return View(libros);
         }
 
-        public IActionResult ComentariosExistentes()
+        public IActionResult ComentariosExistentes(int idLibro)
         {
-            ViewBag.Comentarios = new List<object>
+            var libro = _context.libros.FirstOrDefault(l => l.id == idLibro);
+            if (libro == null)
             {
-                new { Titulo = "Comentario 1", Usuario = "Usuario1", Fecha = "01/04/2025" },
-                new { Titulo = "Comentario 2", Usuario = "Usuario2", Fecha = "02/04/2025" },
-                new { Titulo = "Comentario 3", Usuario = "Usuario3", Fecha = "03/04/2025" }
-            };
+                return NotFound(); // Si el libro no existe, retornamos un error 404
+            }
+
+            var autor = _context.autores.FirstOrDefault(a => a.id == libro.id_autor);
+            var comentarios = _context.comentarios_Libros.Where(c => c.id_libro == idLibro).ToList();
+
+            ViewBag.Libro = libro.nombre;
+            ViewBag.Autor = autor?.autor ?? "Autor Desconocido";
+            ViewBag.IdLibro = libro.id;
+            ViewBag.IdAutor = libro.id_autor;
+
+            ViewData["IdLibro"] = libro.id;
+            ViewData["IdAutor"] = libro.id_autor;
+
+            return View(comentarios);
+        }
+
+        private static List<object> ComentariosDB = new List<object>();
+
+        public IActionResult Confirmacion(int idLibro, int idAutor)
+        {
+            var libro = _context.libros.FirstOrDefault(l => l.id == idLibro);
+            var autor = _context.autores.FirstOrDefault(a => a.id == idAutor);
+
+            ViewBag.Comentarios = ComentariosDB.FindAll(c => (int)c.GetType().GetProperty("idLibro").GetValue(c) == idLibro);
+            ViewBag.ComentarioNuevo = TempData["ComentarioNuevo"] as string ?? "";
+            ViewBag.IdLibro = idLibro;
+            ViewBag.Libro = libro.nombre;
+            ViewBag.Autor = autor?.autor ?? "Autor Desconocido";
+            ViewBag.IdAutor = idAutor;
+
             return View();
         }
 
-        public IActionResult Confirmacion()
+        [HttpPost]
+        public IActionResult GuardarComentario(string Comentario, int idLibro, int idAutor)
         {
-            ViewBag.Comentarios = new List<object>
+            if (string.IsNullOrWhiteSpace(Comentario))
             {
-                new { Titulo = "Comentario 1", Usuario = "Usuario1", Fecha = "01/04/2025" },
-                new { Titulo = "Comentario 2", Usuario = "Usuario2", Fecha = "02/04/2025" },
-                new { Titulo = "Comentario 3", Usuario = "Usuario3", Fecha = "03/04/2025" }
+                return RedirectToAction("Confirmacion", new { idLibro = idLibro, idAutor = idAutor });
+            }
+
+            var nuevoComentario = new
+            {
+                comentarios = Comentario,
+                usuario = "UsuarioActual",
+                created_at = DateTime.Now,
+                idLibro = idLibro
             };
-            return View();
+
+            // Guardar en "base de datos"
+            ComentariosDB.Add(nuevoComentario);
+
+            TempData["ComentarioNuevo"] = Comentario;
+
+            return RedirectToAction("Confirmacion", new { idLibro = idLibro, idAutor = idAutor });
         }
+
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

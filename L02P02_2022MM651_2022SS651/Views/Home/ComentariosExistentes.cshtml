@@ -1,18 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Comentarios";
 }
+<link rel="stylesheet" href="~/css/style.css" asp-append-version="true" />
 
+<div class="bg-header-footer container-fluid text-center pt-5 pb-5">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/UNICAES_Logo.png/800px-UNICAES_Logo.png" alt="Logo UNICAES" class="logo-unicaes" />
+    <h2 class="text-white">Comentarior por Libros</h2>
+    <p class="text-secondary">
+        Seleccione el autor -> Seleccione el Libro -> Se muestran los comentarios existentes
+        -> Adicione un nuevo comentario
+    </p>
+</div>
 
 <div class="container mt-4">
     <div class="list-group-item">
         <div class="row pt-3 pb-3">
             <div class="col-md-6 d-flex">
                 <label class="fw-bold text-primary">Autor:</label>
-                <div class="ms-3">Nombre del Autor Seleccionado</div>
+                <div class="ms-3">@ViewBag.Autor</div>
             </div>
             <div class="col-md-6 d-flex">
                 <label class="fw-bold text-primary">Libro:</label>
-                <div class="ms-3">Nombre del Libro Seleccionado</div>
+                <div class="ms-3">@ViewBag.Libro</div>
             </div>
         </div>
 
@@ -23,32 +32,59 @@
         <div class="col-md-6">
             <h5 class="text-primary fw-bold">Comentarios Existentes</h5>
             <div class="list-group">
-                @foreach (var comentario in ViewBag.Comentarios)
+                @foreach (var comentario in Model)
                 {
-                    <div class="list-group-item">
-                        <strong>@comentario.Titulo</strong>
-                        <div class="text-muted">Usuario: @comentario.Usuario</div>
-                        <div class="text-muted">Fecha: @comentario.Fecha</div>
-                    </div>
+                    <tr>
+                        <strong>@comentario.comentarios</strong>
+                        <td>@comentario.usuario</td>
+                        <td>@comentario.created_at.ToString("dd/MM/yyyy")</td>
+                    </tr>
                 }
             </div>
         </div>
 
         <div class="col-md-6">
-            <h5 class="text-primary fw-bold">Agregar un Comentario</h5>
 
-            @using (Html.BeginForm("GuardarComentario", "Libros", FormMethod.Post, new { @class = "mt-2" }))
-            {
-                <div class="mb-3">
-                    @Html.Label("Comentario")
-                    @Html.TextArea("Comentario", null, new { @class = "form-control", rows = "4", required = "required" })
-                </div>
+            <!-- Agregar Comentario -->
+            <div class="col-md-6">
+                <h5 class="text-primary fw-bold">Agregar un Comentario</h5>
 
-                <div class="list-group-item rounded">
-                    <button type="submit" class="btn btn-success w-100">Guardar Comentario</button>
+                @using (Html.BeginForm("GuardarComentario", "Home", FormMethod.Post, new { @class = "mt-2" }))
+                {
+                    @Html.Hidden("idLibro", ViewData["IdLibro"])
+                    @Html.Hidden("idAutor", ViewData["IdAutor"])
 
-                </div>
-            }
+                    <div class="mb-3">
+                        @Html.Label("Comentario")
+                        @Html.TextArea("Comentario", null, new { @class = "form-control", rows = "4", required = "required" })
+                    </div>
+
+                    <div class="list-group-item rounded">
+                        <button type="submit" class="btn btn-success w-100">Guardar Comentario</button>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(".nuevo-comentario").click(function () {
+            $(".progressbar li").removeClass("active");
+            $(".progressbar li[data-view='Confirmacion']").addClass("active");
+
+            $.ajax({
+                url: "/Home/Confirmacion",
+                type: "GET",
+                success: function (data) {
+                    $("#contenido-parcial").html(data);
+                },
+                error: function () {
+                    $("#contenido-parcial").html("<p>Error al cargar la confirmación.</p>");
+                }
+            });
+        });
+    });
+
+</script>
