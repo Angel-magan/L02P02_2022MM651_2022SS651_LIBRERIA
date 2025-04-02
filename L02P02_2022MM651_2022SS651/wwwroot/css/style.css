@@ -1,4 +1,11 @@
-﻿.container {
+﻿.bg-header-footer {
+    background-color: #22252c;
+}
+.logo-unicaes {
+    width: 100px;
+    height: 100px;
+}
+.container {
     width: 100%;
     margin: 100px auto;
 }
