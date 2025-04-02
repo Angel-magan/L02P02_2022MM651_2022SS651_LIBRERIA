@@ -1,26 +1,5 @@
 ﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 
-@* @model List<L02P02_2022MM651_2022SS651.Models.libros> *@
-
-@* @{ *@
-@*     ViewData["Title"] = "Libro Autores"; *@
-@* } *@
-
-@* <div class="border p-3"> *@
-@*     <h4>📚 Autor: <strong>@ViewBag.Autor</strong></h4> *@
-@* </div> *@
-
-@* <div class="border p-3 mt-3"> *@
-@*     <h5 style="color: blue;">Seleccione el Libro del autor</h5> *@
-
-@*     @foreach (var libro in Model) *@
-@*     { *@
-@*         <div class="d-flex justify-content-between align-items-center border p-2"> *@
-@*             <p>@libro.nombre</p> *@
-@*             <button class="btn btn-success">Seleccionar</button> *@
-@*         </div> *@
-@*     } *@
-@* </div> *@
 
 @model List<L02P02_2022MM651_2022SS651.Models.libros>
 
@@ -42,10 +21,37 @@
             {
                 <div class="d-flex justify-content-between align-items-center border p-3">
                     <span class="fw-normal"> @libro.nombre </span>
-                    <button class="btn btn-success btn-sm">Seleccionar</button>
+                    <a href="@Url.Action("ComentariosExistentes", "Home", new { idLibro = libro.id })" class="btn btn-primary">
+                        Seleccionar
+                    </a>
+                    @* <button class="btn btn-success btn-sm">Seleccionar</button> *@
                 </div>
             }
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(".seleccionar-libro").click(function () {
+            var libroId = $(this).data("libro-id");
+            $(".progressbar li").removeClass("active");
+            $(".progressbar li[data-view='ComentariosExistentes']").addClass("active");
+
+            $.ajax({
+                url: "/Home/ComentariosExistentes",
+                type: "GET",
+                data: { idLibro: libroId },
+                success: function (data) {
+                    $("#contenido-parcial").html(data);
+                },
+                error: function () {
+                    $("#contenido-parcial").html("<p>Error al cargar los comentarios.</p>");
+                }
+            });
+        });
+    });
+</script>
+
+
 

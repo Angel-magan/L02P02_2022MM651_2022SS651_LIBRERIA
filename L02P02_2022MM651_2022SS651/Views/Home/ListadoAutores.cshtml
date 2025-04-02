@@ -1,26 +1,9 @@
-﻿@* @model List<autores> *@
-
-@* @{ *@
-@*     ViewData["Title"] = "Listado de Autores"; *@
-@* } *@
-
-@* <div class="border p-3"> *@
-@*     <h4>Autor</h4> *@
-@*     @foreach (var autor in Model) *@
-@*     { *@
-@*         <div class="d-flex justify-content-between align-items-center border p-2"> *@
-@*             <p>@autor.autor</p> *@
-@*             <a asp-controller="Home" asp-action="ListadoLibroAutor" asp-route-idAutor="@autor.id" class="btn btn-success"> *@
-@*                 Seleccionar *@
-@*             </a> *@
-@*         </div> *@
-@*     } *@
-@* </div> *@
+﻿
 
 
 @model List<L02P02_2022MM651_2022SS651.Models.autores>
 
-<div class="border p-3">
+<div class="border p-3 container">
     <h4>Autores</h4>
 
     <div class="list-group">
@@ -38,13 +21,15 @@
     $(document).ready(function () {
         $(".seleccionar-autor").click(function () {
             var autorId = $(this).data("autor-id");
+            $(".progressbar li").removeClass("active");
+            $(".progressbar li[data-view='ListadoLibroAutor']").addClass("active");
 
             $.ajax({
                 url: "/Home/ListadoLibroAutor",
                 type: "GET",
                 data: { idAutor: autorId },
                 success: function (data) {
-                    $("#contenido-parcial").html(data); // Carga la vista en el mismo div
+                    $("#contenido-parcial").html(data);
                 },
                 error: function () {
                     $("#contenido-parcial").html("<p>Error al cargar los libros.</p>");

@@ -1,35 +1,39 @@
 ﻿@{
-    ViewData["Title"] = "Agregar comentario";
+    ViewData["Title"] = "Comentario Agregado";
 }
-
 
 <div class="container mt-4">
     <div class="list-group-item">
         <div class="row pt-3 pb-3">
             <div class="col-md-6 d-flex">
                 <label class="fw-bold text-primary">Autor:</label>
-                <div class="ms-3">Nombre del Autor Seleccionado</div>
+                <div class="ms-3">@ViewBag.Autor</div>
             </div>
             <div class="col-md-6 d-flex">
                 <label class="fw-bold text-primary">Libro:</label>
-                <div class="ms-3">Nombre del Libro Seleccionado</div>
+                <div class="ms-3">@ViewBag.Libro</div>
             </div>
         </div>
-
     </div>
-
 
     <div class="row">
         <div class="col-md-6">
             <h5 class="text-primary fw-bold">Comentarios Existentes</h5>
             <div class="list-group">
-                @foreach (var comentario in ViewBag.Comentarios)
+                @if (ViewBag.Comentarios != null && ViewBag.Comentarios.Count > 0)
                 {
-                    <div class="list-group-item">
-                        <strong>@comentario.Titulo</strong>
-                        <div class="text-muted">Usuario: @comentario.Usuario</div>
-                        <div class="text-muted">Fecha: @comentario.Fecha</div>
-                    </div>
+                    @foreach (var comentario in ViewBag.Comentarios)
+                    {
+                        <div class="list-group-item">
+                            <strong>@comentario.comentarios</strong><br>
+                            <span>Usuario: @comentario.usuario</span><br>
+                            <span>Fecha: @comentario.created_at.ToString("dd/MM/yyyy")</span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="alert alert-warning">No hay comentarios aún.</div>
                 }
             </div>
         </div>
@@ -37,14 +41,21 @@
         <div class="col-md-6">
             <h5 class="text-primary fw-bold">Agregar un Comentario</h5>
 
-            @using (Html.BeginForm("GuardarComentario", "Libros", FormMethod.Post, new { @class = "mt-2" }))
+            @using (Html.BeginForm("GuardarComentario", "Home", FormMethod.Post, new { @class = "mt-2" }))
             {
+                @Html.Hidden("idLibro", (int)ViewBag.IdLibro)
+                @Html.Hidden("idAutor", (int)ViewBag.IdAutor)
+
                 <div class="mb-3">
                     @Html.Label("Comentario")
-                    @Html.TextArea("Comentario", null, new { @class = "form-control", placeholder="Contenido del comentario agregado", rows = "4", required = "required" })
+                    @Html.TextArea("Comentario", (string)ViewBag.ComentarioNuevo ?? "", new { @class = "form-control", rows = "4", required = "required" })
                 </div>
 
-                <div class="list-group-item rounded">
+            }
+
+            @if (!string.IsNullOrEmpty(ViewBag.ComentarioNuevo))
+            {
+                <div class="list-group-item rounded mt-3">
                     <div class="alert alert-info mb-0" role="alert">
                         Comentario Adicionado con éxito!
                     </div>
@@ -53,3 +64,11 @@
         </div>
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $(".progressbar li").removeClass("active");
+        $(".progressbar li[data-view='Confirmacion']").addClass("active");
+    });
+
+</script>
