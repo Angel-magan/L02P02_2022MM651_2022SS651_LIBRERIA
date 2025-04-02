@@ -31,27 +31,29 @@
     </div>
 </div>
 
-<script>
-    $(document).ready(function () {
-        $(".seleccionar-libro").click(function () {
-            var libroId = $(this).data("libro-id");
-            $(".progressbar li").removeClass("active");
-            $(".progressbar li[data-view='ComentariosExistentes']").addClass("active");
+ <script>
+     $(document).ready(function () {
+         $(".seleccionar-libro").click(function () {
+             var libroId = $(this).data("libro-id");
+             $(".progressbar li").removeClass("active");
+             $(".progressbar li[data-view='ComentariosExistentes']").addClass("active");
 
             $.ajax({
-                url: "/Home/ComentariosExistentes",
-                type: "GET",
-                data: { idLibro: libroId },
-                success: function (data) {
-                    $("#contenido-parcial").html(data);
-                },
-                error: function () {
-                    $("#contenido-parcial").html("<p>Error al cargar los comentarios.</p>");
-                }
-            });
-        });
-    });
-</script>
+                 url: "/Home/ComentariosExistentes",
+                 type: "GET",
+                 data: { idLibro: libroId },
+                 success: function (data) {
+                     $("#contenido-parcial").html(data);
+                 },
+                 error: function () {
+                     $("#contenido-parcial").html("<p>Error al cargar los comentarios.</p>");
+                 }
+             });
+         });
+     });
+ </script>
+
+
 
 
 

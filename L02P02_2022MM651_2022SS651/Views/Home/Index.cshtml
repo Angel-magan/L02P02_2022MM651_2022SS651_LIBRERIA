@@ -4,7 +4,7 @@
 }
 <div class="bg-header-footer container-fluid text-center pt-5 pb-5">
     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/UNICAES_Logo.png/800px-UNICAES_Logo.png" alt="Logo UNICAES" class="logo-unicaes" />
-    <h2 class="text-white">Comentarior por Libros</h2>
+    <h2 class="text-white">Comentarios por Libros</h2>
     <p class="text-secondary">
         Seleccione el autor -> Seleccione el Libro -> Se muestran los comentarios existentes
         -> Adicione un nuevo comentario
@@ -12,16 +12,17 @@
 </div>
 
 <div class="container mb-5">
-    <ul class="progressbar">
-        <li class="active" data-view="ListadoAutores">Autores</li>
-        <li data-view="ListadoLibroAutor">Libros</li>
-        <li data-view="ComentariosExistentes">Comentarios existentes</li>
-        <li data-view="Confirmacion">Nuevo comentario</li>
-    </ul>
-</div>
+    <div id="contenedor-principal">
+        <ul class="progressbar">
+            <li class="active" data-view="ListadoAutores">Autores</li>
+            <li data-view="ListadoLibroAutor">Libros</li>
+            <li data-view="ComentariosExistentes">Comentarios existentes</li>
+            <li data-view="Confirmacion">Nuevo comentario</li>
+        </ul>
 
-<div id="contenido-parcial" class="contenido-dinamico">
-    <!-- Aquí se cargará la vista -->
+        <div id="contenido-parcial" class="contenido-dinamico">
+        </div>
+    </div>
 </div>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -30,32 +31,19 @@
         $(".progressbar li").click(function () {
             var viewName = $(this).data("view");
 
-            // Remueve la clase "active" y agrégala solo al seleccionado
+            //Remueve la clase "active" y agrégala solo al seleccionado
             $(".progressbar li").removeClass("active");
             $(this).addClass("active");
 
-            // Cargar la vista parcial mediante AJAX
-            $.ajax({
-                url: "/Home/" + viewName,
-                type: "GET",
-                success: function (data) {
-                    $("#contenido-parcial").html(data); // Actualiza el div con la nueva vista
-                },
-                error: function () {
-                    $("#contenido-parcial").html("<p>Error al cargar la vista.</p>");
-                }
+            //Cargar la vista parcial mediante AJAX
+            $.get("/Home/" + viewName, function (data) {
+                $("#contenido-parcial").html(data); //Actualiza el div con la nueva vista
             });
         });
 
-        // Cargar la vista inicial (Autores) al cargar la página
-        $.ajax({
-            url: "/Home/ListadoAutores",
-            type: "GET",
-            success: function (data) {
-                $("#contenido-parcial").html(data);
-            }
+        //Cargar la vista inicial (Autores) al cargar la página
+        $.get("/Home/ListadoAutores", function (data) {
+            $("#contenido-parcial").html(data);
         });
     });
 </script>
-
-

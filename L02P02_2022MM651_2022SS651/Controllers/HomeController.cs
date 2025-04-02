@@ -28,9 +28,8 @@ namespace L02P02_2022MM651_2022SS651.Controllers
         public IActionResult ListadoAutores()
         {
             var autores = _context.autores.ToList(); // Obtiene todos los autores de la BD
-            return View(autores);
+            return PartialView(autores);
         }
-
 
         public IActionResult ListadoLibroAutor(int idAutor)
         {
@@ -38,7 +37,7 @@ namespace L02P02_2022MM651_2022SS651.Controllers
             var autor = _context.autores.FirstOrDefault(a => a.id == idAutor);
 
             ViewBag.Autor = autor?.autor ?? "Autor Desconocido"; 
-            return View(libros);
+            return PartialView(libros);
         }
 
         public IActionResult ComentariosExistentes(int idLibro)
@@ -60,7 +59,7 @@ namespace L02P02_2022MM651_2022SS651.Controllers
             ViewData["IdLibro"] = libro.id;
             ViewData["IdAutor"] = libro.id_autor;
 
-            return View(comentarios);
+            return PartialView(comentarios);
         }
 
         private static List<object> ComentariosDB = new List<object>();
